@@ -35,13 +35,13 @@ class Maybe {
   constexpr auto map(F&& f) const&;
 
   template <typename F>
-  constexpr auto map(F&& f) const&&;
+  constexpr auto map(F&& f) &&;
 
   template <typename F>
   constexpr auto flatMap(F&& f) const&;
 
   template <typename F>
-  constexpr auto flatMap(F&& f) const&&;
+  constexpr auto flatMap(F&& f) &&;
 
  private:
   template <typename L, typename R>

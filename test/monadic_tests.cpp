@@ -4,7 +4,7 @@
 
 using namespace fredis;
 
-TEST_CASE("test1", "[fredis]") {
+TEST_CASE("Maybe", "[fredis]") {
   REQUIRE(1 + 1 == 2);
   Maybe<int> n(1);
 
@@ -36,7 +36,9 @@ TEST_CASE("test1", "[fredis]") {
     return (v == 0.0) ? none<double>() : some(1.0 / v);
   });
   CHECK(m5 == 1.0 / 4.0);
+}
 
+TEST_CASE("Result", "[fredis]") {
   Result<int> r1 = ok(4);
   REQUIRE(r1.isOk() == true);
   CHECK(!r1.isError());

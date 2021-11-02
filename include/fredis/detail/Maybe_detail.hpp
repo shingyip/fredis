@@ -50,7 +50,7 @@ constexpr auto Maybe<T>::map(F&& f) const& {
 
 template <typename T>
 template <typename F>
-constexpr auto Maybe<T>::map(F&& f) const&& {
+constexpr auto Maybe<T>::map(F&& f) && {
   if (hasValue())
     return some(std::invoke(std::forward<F>(f), std::move(value_.value())));
   else
@@ -70,7 +70,7 @@ constexpr auto Maybe<T>::flatMap(F&& f) const& {
 
 template <typename T>
 template <typename F>
-constexpr auto Maybe<T>::flatMap(F&& f) const&& {
+constexpr auto Maybe<T>::flatMap(F&& f) && {
   if (hasValue())
     return std::invoke(std::forward<F>(f), std::move(value_.value()));
   else
