@@ -53,4 +53,31 @@ TEST_CASE("Result", "[fredis]") {
   auto r4 = r2.map([](int n) { return "answer = " + std::to_string(n); });
   CHECK(r3.get() == "answer = 42");
   CHECK(r4.getError() == ErrorMsg("bad number"));
+
+  struct NoCpy {
+    NoCpy(NoCpy&&) = default;
+    NoCpy& operator=(NoCpy&&) = default;
+    NoCpy(const NoCpy&) = delete;
+    NoCpy& operator=(const NoCpy&) = delete;
+    std::string val;
+  };
+
+  Result<NoCpy> r5 = ok(NoCpy{"s1"});
+
+  std::string r5Val;
+  std::move(r5).then([&r5Val](const NoCpy& nc) { r5Val = nc.val; });
+  CHECK(r5Val == "s1");
+
+  Result<int> r6 = ErrorMsg("bad number"), r7 = ok(7);
+  CHECK_THROWS_AS(r6.expect("number not good"), Result<int>::Unexpected);
+  CHECK_NOTHROW(r7.expect("number not good"));
+
+  Result<int> r8 = ErrorMsg("bad number"), r9 = ok(9);
+  CHECK_THROWS_AS(r8.unwrap(), Result<int>::Unexpected);
+  CHECK(r9.unwrap() == 9);
+
+  Result<int, std::string> r10 = std::string("bad number"), r11 = 11;
+  using ToThrow = Result<int, std::string>::Unexpected;
+  CHECK_THROWS_AS(r10.unwrap(), ToThrow);
+  CHECK(r11.unwrap() == 11);
 }
